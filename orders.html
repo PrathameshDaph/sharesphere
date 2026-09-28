@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Orders — ShareSphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar"><div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+<div class="nav-links"><a href="/dashboard.html">Dashboard</a><a href="/items.html">Browse</a></div>
+<div class="nav-actions" id="navActions"></div></nav>
+<div class="page-container">
+  <div class="page-header"><h2>🛒 My Orders</h2></div>
+  <div id="ordersList"></div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script>
+requireAuth();
+const me = JSON.parse(localStorage.getItem('ss_user')||'{}');
+async function loadOrders() {
+  const orders = await API.get('/api/orders/my');
+  document.getElementById('ordersList').innerHTML = orders.length ? orders.map(o => `
+    <div class="rental-card">
+      <div class="rental-info">
+        <img src="${o.item?.imageUrls?.[0]||'/images/placeholder.svg'}" class="rental-thumb" onerror="this.src='/images/placeholder.svg'">
+        <div>
+          <h3>${o.item?.name}</h3>
+          <p>Ref: ${o.transactionRef}</p>
+          <p>${o.buyer?.id===me.userId ? 'Bought from '+o.seller?.name : 'Sold to '+o.buyer?.name}</p>
+          <p>Amount: <strong>₹${o.amount}</strong></p>
+        </div>
+      </div>
+      <div class="rental-right">
+        <span class="status-badge status-${o.paymentStatus.toLowerCase()}">${o.paymentStatus}</span>
+        ${o.paymentStatus==='PENDING' && o.buyer?.id===me.userId ?
+          `<button onclick="payOrder(${o.id})" class="btn btn-primary btn-sm">Pay Now (Simulate)</button>` : ''}
+      </div>
+    </div>`).join('') : '<div class="empty-state"><p>No orders yet.</p></div>';
+}
+async function payOrder(id) {
+  await API.post(`/api/orders/${id}/pay`);
+  showToast('Payment confirmed! ✅','success'); loadOrders();
+}
+loadOrders(); updateNavForAuth();
+</script>
+</body></html>

@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Add Item — ShareSphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar"><div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+<div class="nav-links"><a href="/dashboard.html">Dashboard</a><a href="/items.html">Browse</a></div>
+<div class="nav-actions" id="navActions"></div></nav>
+<div class="form-page">
+  <div class="form-card">
+    <h2>📦 List a New Item</h2>
+    <p>Fill in the details to list your item on ShareSphere</p>
+    <div id="formError" class="alert alert-error hidden"></div>
+    <form id="addItemForm">
+      <div class="form-row">
+        <div class="form-group"><label>Item Name *</label><input type="text" id="iName" class="form-control" placeholder="e.g. Casio FX-991CW Calculator" required></div>
+        <div class="form-group"><label>Category *</label><select id="iCategory" class="form-control" required><option value="">Select category...</option></select></div>
+      </div>
+      <div class="form-group"><label>Description</label><textarea id="iDesc" class="form-control" rows="3" placeholder="Describe the item, its condition and any notes..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Condition *</label><select id="iCondition" class="form-control" required><option value="">Select...</option><option>New</option><option>Like New</option><option>Good</option><option>Fair</option></select></div>
+        <div class="form-group"><label>Listing Type *</label><select id="iType" class="form-control" required onchange="togglePriceFields()"><option value="">Select...</option><option value="SELL">For Sale</option><option value="RENT">For Rent</option><option value="LEND">For Lending (Free)</option><option value="SELL_AND_RENT">Sale &amp; Rent</option></select></div>
+      </div>
+      <div class="form-row" id="priceFields">
+        <div class="form-group"><label>Sale Price (₹)</label><input type="number" id="iPrice" class="form-control" placeholder="0.00" min="0"></div>
+        <div class="form-group"><label>Rental Price/Day (₹)</label><input type="number" id="iRental" class="form-control" placeholder="0.00" min="0"></div>
+        <div class="form-group"><label>Security Deposit (₹)</label><input type="number" id="iDeposit" class="form-control" placeholder="0.00" min="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Quantity</label><input type="number" id="iQty" class="form-control" value="1" min="1"></div>
+        <div class="form-group"><label>Location / Area</label><input type="text" id="iLocation" class="form-control" placeholder="e.g. Hostel A, Block C"></div>
+      </div>
+      <div class="form-group">
+        <label>Item Image</label>
+        <div class="file-upload-zone" id="uploadZone" onclick="document.getElementById('imageFile').click()">
+          <span>📷 Click to upload image</span>
+          <input type="file" id="imageFile" accept="image/*" class="hidden" onchange="previewImage(this)">
+          <img id="imagePreview" class="hidden" style="max-width:100%;border-radius:8px;margin-top:10px;">
+        </div>
+      </div>
+      <div class="form-actions">
+        <a href="/my-listings.html" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">🚀 List Item</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script>
+requireAuth();
+loadCategories();
+async function loadCategories() {
+  const cats = await API.get('/api/categories');
+  const sel = document.getElementById('iCategory');
+  cats.forEach(c => sel.innerHTML += `<option value="${c.id}">${c.icon} ${c.name}</option>`);
+}
+function togglePriceFields() {
+  const t = document.getElementById('iType').value;
+  document.getElementById('priceFields').style.display = (t==='LEND') ? 'none' : 'flex';
+}
+function previewImage(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => { const img=document.getElementById('imagePreview'); img.src=e.target.result; img.classList.remove('hidden'); };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+document.getElementById('addItemForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('iName').value,
+    description: document.getElementById('iDesc').value,
+    categoryId: +document.getElementById('iCategory').value,
+    condition: document.getElementById('iCondition').value,
+    listingType: document.getElementById('iType').value,
+    price: document.getElementById('iPrice').value || null,
+    rentalPricePerDay: document.getElementById('iRental').value || null,
+    securityDeposit: document.getElementById('iDeposit').value || null,
+    availableQuantity: +document.getElementById('iQty').value,
+    location: document.getElementById('iLocation').value
+  };
+  try {
+    const item = await API.post('/api/items', data);
+    const imageFile = document.getElementById('imageFile').files[0];
+    if (imageFile) {
+      const fd = new FormData(); fd.append('file', imageFile);
+      await API.uploadFile(`/api/items/${item.id}/images`, fd);
+    }
+    showToast('Item listed successfully! 🎉', 'success');
+    setTimeout(() => window.location='/my-listings.html', 1500);
+  } catch(e) { document.getElementById('formError').textContent = e.message; document.getElementById('formError').classList.remove('hidden'); }
+});
+</script>
+</body></html>
