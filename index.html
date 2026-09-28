@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -6,23 +6,25 @@
 <meta name="description" content="Buy, sell, rent and lend campus items with AI-powered recommendations.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <!-- NAV -->
 <nav class="navbar" id="navbar">
   <div class="nav-brand">
-    <span class="logo-icon">🌐</span>
-    <span class="logo-text">ShareSphere</span>
+    <a href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;">
+      <span class="logo-icon">🌐</span>
+      <span class="logo-text">ShareSphere</span>
+    </a>
   </div>
   <div class="nav-links" id="navLinks">
-    <a href="/items.html">Browse</a>
-    <a href="/items.html?ai=1">🤖 AI Search</a>
+    <a href="items.html">Browse</a>
+    <a href="items.html?ai=1">🤖 AI Search</a>
     <a href="#categories">Categories</a>
   </div>
   <div class="nav-actions" id="navActions">
-    <a href="/login.html" class="btn btn-ghost">Login</a>
-    <a href="/register.html" class="btn btn-primary">Get Started</a>
+    <a href="login.html" class="btn btn-ghost">Login</a>
+    <a href="register.html" class="btn btn-primary">Get Started</a>
   </div>
 </nav>
 
@@ -38,8 +40,8 @@
       <button onclick="doHeroSearch()" class="btn btn-primary btn-lg">🤖 AI Search</button>
     </div>
     <div class="hero-stats">
-      <div class="stat"><span class="stat-num" id="statItems">0</span><span class="stat-label">Items Listed</span></div>
-      <div class="stat"><span class="stat-num" id="statUsers">0</span><span class="stat-label">Students</span></div>
+      <div class="stat"><span class="stat-num" id="statItems">15+</span><span class="stat-label">Items Listed</span></div>
+      <div class="stat"><span class="stat-num" id="statUsers">6+</span><span class="stat-label">Students</span></div>
       <div class="stat"><span class="stat-num">14</span><span class="stat-label">Categories</span></div>
     </div>
   </div>
@@ -67,7 +69,7 @@
   <div class="container">
     <div class="section-header">
       <h2>🔥 Popular Items</h2>
-      <a href="/items.html" class="btn btn-ghost btn-sm">View All →</a>
+      <a href="items.html" class="btn btn-ghost btn-sm">View All →</a>
     </div>
     <div class="items-grid" id="popularGrid"></div>
   </div>
@@ -89,7 +91,7 @@
 <!-- LATEST ITEMS -->
 <section class="section section-dark">
   <div class="container">
-    <div class="section-header"><h2>🆕 Latest Listings</h2><a href="/items.html" class="btn btn-ghost btn-sm">See All →</a></div>
+    <div class="section-header"><h2>🆕 Latest Listings</h2><a href="items.html" class="btn btn-ghost btn-sm">See All →</a></div>
     <div class="items-grid" id="latestGrid"></div>
   </div>
 </section>
@@ -101,9 +103,9 @@
       <div><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span>
         <p>Share More. Spend Less.</p></div>
       <div class="footer-links">
-        <a href="/items.html">Browse Items</a>
-        <a href="/login.html">Login</a>
-        <a href="/register.html">Register</a>
+        <a href="items.html">Browse Items</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
       </div>
     </div>
     <div class="footer-bottom"><p>© 2024 ShareSphere — Campus Asset Exchange Platform</p></div>
@@ -111,40 +113,52 @@
 </footer>
 
 <div id="toast" class="toast hidden"></div>
-<script src="/js/api.js"></script>
-<script src="/js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
 <script>
 async function loadHomePage() {
   // Stats
   try {
     const items = await API.get('/api/items/popular');
-    document.getElementById('statItems').textContent = items.length + '+';
+    if (items && items.length) document.getElementById('statItems').textContent = items.length + '+';
     const users = await API.get('/api/admin/stats').catch(()=>null);
     if (users) document.getElementById('statUsers').textContent = users.totalUsers + '+';
   } catch(e){}
 
   // Categories
-  const cats = await API.get('/api/categories');
-  const grid = document.getElementById('categoryGrid');
-  grid.innerHTML = cats.map(c => `
-    <a href="/items.html?categoryId=${c.id}" class="category-card">
-      <div class="cat-icon">${c.icon}</div>
-      <div class="cat-name">${c.name}</div>
-    </a>`).join('');
+  try {
+    const cats = await API.get('/api/categories');
+    const grid = document.getElementById('categoryGrid');
+    if (cats && cats.length) {
+      grid.innerHTML = cats.map(c => `
+        <a href="items.html?categoryId=${c.id}" class="category-card">
+          <div class="cat-icon">${c.icon}</div>
+          <div class="cat-name">${c.name}</div>
+        </a>`).join('');
+    }
+  } catch(e){}
 
   // Popular
-  const popular = await API.get('/api/items/popular');
-  document.getElementById('popularGrid').innerHTML = popular.map(renderItemCard).join('');
+  try {
+    const popular = await API.get('/api/items/popular');
+    if (popular && popular.length) {
+      document.getElementById('popularGrid').innerHTML = popular.map(renderItemCard).join('');
+    }
+  } catch(e){}
 
   // Latest
-  const latest = await API.get('/api/items/latest');
-  document.getElementById('latestGrid').innerHTML = latest.map(renderItemCard).join('');
+  try {
+    const latest = await API.get('/api/items/latest');
+    if (latest && latest.length) {
+      document.getElementById('latestGrid').innerHTML = latest.map(renderItemCard).join('');
+    }
+  } catch(e){}
 }
 
 function doHeroSearch() {
   const q = document.getElementById('heroSearch').value.trim();
   if (!q) return;
-  window.location.href = `/items.html?ai=1&query=${encodeURIComponent(q)}`;
+  window.location.href = `items.html?ai=1&query=${encodeURIComponent(q)}`;
 }
 document.getElementById('heroSearch').addEventListener('keydown', e => { if(e.key==='Enter') doHeroSearch(); });
 loadHomePage();
