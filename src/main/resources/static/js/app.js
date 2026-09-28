@@ -1,10 +1,10 @@
-﻿// ── Auth Helpers ─────────────────────────────────────────────────────────────────
+// ── Auth Helpers ─────────────────────────────────────────────────────────────────
 function isLoggedIn() { return !!localStorage.getItem('ss_token'); }
 function getUser() { return JSON.parse(localStorage.getItem('ss_user') || 'null'); }
-function logout() { localStorage.clear(); window.location = '/login.html'; }
+function logout() { localStorage.clear(); window.location = 'login.html'; }
 
 function requireAuth() {
-  if (!isLoggedIn()) { window.location = '/login.html'; }
+  if (!isLoggedIn()) { window.location = 'login.html'; }
 }
 
 function updateNavForAuth() {
@@ -13,24 +13,23 @@ function updateNavForAuth() {
   const user = getUser();
   if (user) {
     actions.innerHTML = `
-      <a href="/dashboard.html" class="btn btn-ghost">Dashboard</a>
-      <a href="/add-item.html" class="btn btn-primary">+ List Item</a>
+      <a href="dashboard.html" class="btn btn-ghost">Dashboard</a>
+      <a href="add-item.html" class="btn btn-primary">+ List Item</a>
       <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="toggleUserMenu()">
         <div class="avatar">${user.name?.[0]||'U'}</div>
       </div>
       <div class="user-menu hidden" id="userMenu">
-        <a href="/dashboard.html">Dashboard</a>
-        <a href="/profile.html">Profile</a>
-        <a href="/my-listings.html">My Listings</a>
-        <a href="/rentals.html">Rentals</a>
-        <a href="/orders.html">Orders</a>
-        ${user.role==='ADMIN'?'<a href="/admin.html">Admin Panel</a>':''}
+        <a href="dashboard.html">Dashboard</a>
+        <a href="my-listings.html">My Listings</a>
+        <a href="rentals.html">Rentals</a>
+        <a href="orders.html">Orders</a>
+        ${user.role==='ADMIN'?'<a href="admin.html">Admin Panel</a>':''}
         <a href="#" onclick="logout()">Logout</a>
       </div>`;
     const nl = document.getElementById('navLinks');
-    if (nl) nl.innerHTML = `<a href="/items.html">Browse</a><a href="/messages.html">Messages</a><a href="/notifications.html">🔔</a>`;
+    if (nl) nl.innerHTML = `<a href="items.html">Browse</a><a href="messages.html">Messages</a><a href="notifications.html">🔔</a>`;
   } else {
-    actions.innerHTML = `<a href="/login.html" class="btn btn-ghost">Login</a><a href="/register.html" class="btn btn-primary">Get Started</a>`;
+    actions.innerHTML = `<a href="login.html" class="btn btn-ghost">Login</a><a href="register.html" class="btn btn-primary">Get Started</a>`;
   }
 }
 
@@ -54,15 +53,15 @@ function showToast(msg, type='info') {
 
 // ── Item Card Renderer ────────────────────────────────────────────────────────────
 function renderItemCard(item) {
-  const img = item.imageUrls?.[0] || '/images/placeholder.svg';
+  const img = item.imageUrls?.[0] || 'images/placeholder.svg';
   const price = formatPrice(item);
   const rating = item.averageRating > 0 ? `⭐ ${item.averageRating.toFixed(1)}` : '';
   const fav = item.favorited ? '❤️' : '🤍';
   const user = getUser();
   return `
-    <div class="item-card" onclick="window.location='/item-detail.html?id=${item.id}'">
+    <div class="item-card" onclick="window.location='item-detail.html?id=${item.id}'">
       <div class="item-image-wrap">
-        <img src="${img}" alt="${item.name}" loading="lazy" onerror="this.src='/images/placeholder.svg'">
+        <img src="${img}" alt="${item.name}" loading="lazy" onerror="this.src='images/placeholder.svg'">
         <span class="item-badge badge-${(item.listingType||'').toLowerCase()}">${item.listingType||''}</span>
         ${user ? `<button class="fav-btn" onclick="event.stopPropagation();toggleFav(${item.id},this)">${fav}</button>` : ''}
       </div>

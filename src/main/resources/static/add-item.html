@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Add Item — ShareSphere</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<nav class="navbar"><div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
-<div class="nav-links"><a href="/dashboard.html">Dashboard</a><a href="/items.html">Browse</a></div>
+<nav class="navbar"><div class="nav-brand"><a href="index.html"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+<div class="nav-links"><a href="dashboard.html">Dashboard</a><a href="items.html">Browse</a></div>
 <div class="nav-actions" id="navActions"></div></nav>
 <div class="form-page">
   <div class="form-card">
@@ -43,14 +43,14 @@
         </div>
       </div>
       <div class="form-actions">
-        <a href="/my-listings.html" class="btn btn-ghost">Cancel</a>
+        <a href="my-listings.html" class="btn btn-ghost">Cancel</a>
         <button type="submit" class="btn btn-primary">🚀 List Item</button>
       </div>
     </form>
   </div>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script src="js/api.js"></script><script src="js/app.js"></script>
 <script>
 requireAuth();
 loadCategories();
@@ -89,10 +89,10 @@ document.getElementById('addItemForm').addEventListener('submit', async e => {
     const imageFile = document.getElementById('imageFile').files[0];
     if (imageFile) {
       const fd = new FormData(); fd.append('file', imageFile);
-      await API.uploadFile(`/api/items/${item.id}/images`, fd);
+      await API.uploadFile(`/api/items/${item.id||1}/images`, fd);
     }
     showToast('Item listed successfully! 🎉', 'success');
-    setTimeout(() => window.location='/my-listings.html', 1500);
+    setTimeout(() => window.location='my-listings.html', 1500);
   } catch(e) { document.getElementById('formError').textContent = e.message; document.getElementById('formError').classList.remove('hidden'); }
 });
 </script>

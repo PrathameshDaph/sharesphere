@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Item Detail — ShareSphere</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<nav class="navbar"><div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
-<div class="nav-links"><a href="/items.html">← Back to Items</a></div>
+<nav class="navbar"><div class="nav-brand"><a href="index.html"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+<div class="nav-links"><a href="items.html">← Back to Items</a></div>
 <div class="nav-actions" id="navActions"></div></nav>
 <div class="page-container">
   <div id="itemDetail"></div>
@@ -28,7 +28,7 @@
   </div>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script src="js/api.js"></script><script src="js/app.js"></script>
 <script>
 updateNavForAuth();
 const params = new URLSearchParams(location.search);
@@ -40,7 +40,7 @@ async function loadItem() {
   currentItem = await API.get(`/api/items/${itemId}`).catch(()=>null);
   if (!currentItem) { document.getElementById('itemDetail').innerHTML='<div class="empty-state"><p>Item not found.</p></div>'; return; }
   const i = currentItem;
-  const imgs = i.imageUrls?.length ? i.imageUrls.map(url=>`<img src="${url}" style="width:100%;max-height:400px;object-fit:cover;border-radius:12px;" onerror="this.src='/images/placeholder.svg'">`).join('') : `<img src="/images/placeholder.svg" style="width:100%;border-radius:12px;">`;
+  const imgs = i.imageUrls?.length ? i.imageUrls.map(url=>`<img src="${url}" style="width:100%;max-height:400px;object-fit:cover;border-radius:12px;" onerror="this.src='images/placeholder.svg'">`).join('') : `<img src="images/placeholder.svg" style="width:100%;border-radius:12px;">`;
   const isMine = me && me.userId === i.owner?.id;
   const canBuy = !isMine && (i.listingType==='SELL'||i.listingType==='SELL_AND_RENT');
   const canRent = !isMine && (i.listingType==='RENT'||i.listingType==='SELL_AND_RENT'||i.listingType==='LEND');
@@ -83,7 +83,7 @@ async function loadItem() {
 }
 
 function openRentalModal() {
-  if (!me) { window.location='/login.html'; return; }
+  if (!me) { window.location='login.html'; return; }
   document.getElementById('rentalModal').classList.remove('hidden');
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('rentStart').min = today;
@@ -110,16 +110,16 @@ async function submitRental() {
   await API.post('/api/rentals', data);
   showToast('Rental request sent! 🎉','success');
   closeRentalModal();
-  setTimeout(()=>window.location='/rentals.html',1500);
+  setTimeout(()=>window.location='rentals.html',1500);
 }
 async function buyNow() {
-  if (!me) { window.location='/login.html'; return; }
+  if (!me) { window.location='login.html'; return; }
   if (!confirm('Confirm purchase of '+currentItem?.name+'?')) return;
   const order = await API.post('/api/orders',{itemId:+itemId});
-  showToast('Order created! Ref: '+order.transactionRef,'success');
-  setTimeout(()=>window.location='/orders.html',1500);
+  showToast('Order created! Ref: '+(order.transactionRef||'ORD-1001'),'success');
+  setTimeout(()=>window.location='orders.html',1500);
 }
-function contactOwner(ownerId) { window.location='/messages.html?with='+ownerId; }
+function contactOwner(ownerId) { window.location='messages.html?with='+ownerId; }
 if (itemId) loadItem();
 </script>
 <style>

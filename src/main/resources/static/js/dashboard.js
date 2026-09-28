@@ -1,4 +1,4 @@
-﻿requireAuth();
+requireAuth();
 const me = JSON.parse(localStorage.getItem('ss_user') || '{}');
 
 async function loadDashboard() {
@@ -43,7 +43,7 @@ async function loadDashboard() {
     document.getElementById('incomingList').innerHTML = pendingReqs.map(r => `
       <div class="rental-card">
         <div class="rental-info">
-          <img src="${r.item?.imageUrls?.[0]||'/images/placeholder.svg'}" class="rental-thumb" onerror="this.src='/images/placeholder.svg'">
+          <img src="${r.item?.imageUrls?.[0]||'images/placeholder.svg'}" class="rental-thumb" onerror="this.src='images/placeholder.svg'">
           <div><h3>${r.item?.name}</h3><p>${r.renter?.name} · ${r.durationDays} days · ₹${r.totalPayable}</p></div>
         </div>
         <div class="rental-right">

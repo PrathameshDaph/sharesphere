@@ -1,6 +1,6 @@
-﻿requireAuth();
+requireAuth();
 const me = JSON.parse(localStorage.getItem('ss_user')||'{}');
-if (me.role !== 'ADMIN') window.location = '/dashboard.html';
+if (me.role !== 'ADMIN') window.location = 'dashboard.html';
 document.getElementById('adminUser').textContent = 'Admin: ' + me.name;
 
 function showSection(name) {
@@ -29,7 +29,7 @@ async function loadUsers() {
   const users = await API.get('/api/admin/users');
   document.getElementById('adminUsersList').innerHTML = `<table class="admin-table">
     <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Rating</th><th>Actions</th></tr></thead>
-    <tbody>${users.map(u=>`<tr>
+    <tbody>${(users||[]).map(u=>`<tr>
       <td>${u.name}</td><td>${u.email}</td>
       <td><span class="badge-role">${u.role}</span></td>
       <td>${u.blocked?'<span class="badge-blocked">Blocked</span>':'<span class="badge-active">Active</span>'}</td>
@@ -44,7 +44,7 @@ async function loadAdminItems() {
   const items = await API.get('/api/admin/items');
   document.getElementById('adminItemsList').innerHTML = `<table class="admin-table">
     <thead><tr><th>Name</th><th>Owner</th><th>Category</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
-    <tbody>${items.map(i=>`<tr>
+    <tbody>${(items||[]).map(i=>`<tr>
       <td>${i.name}</td><td>${i.owner?.name}</td>
       <td>${i.category?.name}</td><td>${i.listingType}</td><td>${i.status}</td>
       <td><button onclick="removeItem(${i.id})" class="btn btn-danger btn-sm">Remove</button></td>
@@ -53,7 +53,7 @@ async function loadAdminItems() {
 
 async function loadReports() {
   const reports = await API.get('/api/admin/reports');
-  document.getElementById('adminReportsList').innerHTML = reports.length ?
+  document.getElementById('adminReportsList').innerHTML = (reports||[]).length ?
     reports.map(r=>`<div class="rental-card">
       <div class="rental-info"><div>
         <strong>Reporter:</strong> ${r.reporter?.name}<br>

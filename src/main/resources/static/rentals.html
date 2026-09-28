@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rentals — ShareSphere</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<nav class="navbar"><div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
-<div class="nav-links"><a href="/dashboard.html">Dashboard</a><a href="/items.html">Browse</a></div>
+<nav class="navbar"><div class="nav-brand"><a href="index.html"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+<div class="nav-links"><a href="dashboard.html">Dashboard</a><a href="items.html">Browse</a></div>
 <div class="nav-actions" id="navActions"></div></nav>
 <div class="page-container">
   <div class="tabs-header">
@@ -19,7 +19,7 @@
   <div id="incomingTab" class="hidden"><div id="incomingList"></div></div>
 </div>
 <div id="toast" class="toast hidden"></div>
-<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script src="js/api.js"></script><script src="js/app.js"></script>
 <script>
 requireAuth();
 function switchTab(tab) {
@@ -29,12 +29,15 @@ function switchTab(tab) {
   document.getElementById('incomingTab').classList.toggle('hidden', tab !== 'incoming');
 }
 async function loadRentals() {
-  const [myRentals, incoming] = await Promise.all([API.get('/api/rentals/my'), API.get('/api/rentals/incoming')]);
-  document.getElementById('myRentalsList').innerHTML = myRentals.map(r => renderRentalCard(r, 'renter')).join('') || '<div class="empty-state"><p>No rentals yet. Browse items to rent!</p></div>';
-  document.getElementById('incomingList').innerHTML = incoming.map(r => renderRentalCard(r, 'owner')).join('') || '<div class="empty-state"><p>No incoming rental requests.</p></div>';
+  const [myRentals, incoming] = await Promise.all([
+    API.get('/api/rentals/my').catch(()=>[]),
+    API.get('/api/rentals/incoming').catch(()=>[])
+  ]);
+  document.getElementById('myRentalsList').innerHTML = (myRentals||[]).length ? (myRentals||[]).map(r => renderRentalCard(r, 'renter')).join('') : '<div class="empty-state"><p>No rentals yet. Browse items to rent!</p></div>';
+  document.getElementById('incomingList').innerHTML = (incoming||[]).length ? (incoming||[]).map(r => renderRentalCard(r, 'owner')).join('') : '<div class="empty-state"><p>No incoming rental requests.</p></div>';
 }
 function renderRentalCard(r, role) {
-  const statusClass = r.status.toLowerCase().replace('_','-');
+  const statusClass = (r.status||'').toLowerCase().replace('_','-');
   const actions = role === 'owner' && r.status === 'REQUESTED' ?
     `<button onclick="acceptRental(${r.id})" class="btn btn-primary btn-sm">Accept</button>
      <button onclick="rejectRental(${r.id})" class="btn btn-danger btn-sm">Reject</button>` :
@@ -46,12 +49,12 @@ function renderRentalCard(r, role) {
     `<button onclick="returnRental(${r.id})" class="btn btn-secondary btn-sm">Request Return</button>` : '';
   return `<div class="rental-card">
     <div class="rental-info">
-      <img src="${r.item?.imageUrls?.[0]||'/images/placeholder.svg'}" class="rental-thumb" onerror="this.src='/images/placeholder.svg'">
+      <img src="${r.item?.imageUrls?.[0]||'images/placeholder.svg'}" class="rental-thumb" onerror="this.src='images/placeholder.svg'">
       <div>
         <h3>${r.item?.name}</h3>
         <p>${r.startDate} → ${r.endDate} (${r.durationDays} days)</p>
         <p>₹${r.pricePerDay}/day · Total: ₹${r.totalPayable}</p>
-        <p>${role==='owner'?'From: '+r.renter?.name:'Owner: '+r.owner?.name}</p>
+        <p>${role==='owner'?'From: '+(r.renter?.name||'Student'):'Owner: '+(r.owner?.name||'Owner')}</p>
       </div>
     </div>
     <div class="rental-right">

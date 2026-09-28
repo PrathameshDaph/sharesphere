@@ -1,28 +1,28 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dashboard — ShareSphere</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body class="dashboard-page">
 <nav class="navbar navbar-dashboard">
-  <div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+  <div class="nav-brand"><a href="index.html"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
   <div class="nav-links">
-    <a href="/items.html">Browse</a>
-    <a href="/my-listings.html">My Listings</a>
-    <a href="/rentals.html">Rentals</a>
-    <a href="/messages.html">Messages</a>
+    <a href="items.html">Browse</a>
+    <a href="my-listings.html">My Listings</a>
+    <a href="rentals.html">Rentals</a>
+    <a href="messages.html">Messages</a>
   </div>
   <div class="nav-actions">
-    <span class="notif-bell" onclick="window.location='/notifications.html'">🔔 <span class="badge" id="notifCount">0</span></span>
-    <a href="/add-item.html" class="btn btn-primary">+ List Item</a>
+    <span class="notif-bell" onclick="window.location='notifications.html'">🔔 <span class="badge" id="notifCount">0</span></span>
+    <a href="add-item.html" class="btn btn-primary">+ List Item</a>
     <div class="avatar" id="userAvatar" onclick="toggleUserMenu()">U</div>
     <div class="user-menu hidden" id="userMenu">
-      <a href="/profile.html">Profile</a>
-      <a href="/orders.html">Orders</a>
-      <a href="/favorites.html">Favorites</a>
+      <a href="my-listings.html">My Listings</a>
+      <a href="orders.html">Orders</a>
+      <a href="favorites.html">Favorites</a>
       <a href="#" onclick="logout()">Logout</a>
     </div>
   </div>
@@ -33,29 +33,29 @@
   <aside class="sidebar">
     <div class="sidebar-user" id="sidebarUser"></div>
     <nav class="sidebar-nav">
-      <a href="/dashboard.html" class="active">🏠 Dashboard</a>
-      <a href="/my-listings.html">📦 My Listings</a>
-      <a href="/rentals.html">🔄 Rentals</a>
-      <a href="/orders.html">🛒 Orders</a>
-      <a href="/favorites.html">❤️ Favorites</a>
-      <a href="/messages.html">💬 Messages</a>
-      <a href="/add-item.html">+ Add Item</a>
+      <a href="dashboard.html" class="active">🏠 Dashboard</a>
+      <a href="my-listings.html">📦 My Listings</a>
+      <a href="rentals.html">🔄 Rentals</a>
+      <a href="orders.html">🛒 Orders</a>
+      <a href="favorites.html">❤️ Favorites</a>
+      <a href="messages.html">💬 Messages</a>
+      <a href="add-item.html">+ Add Item</a>
     </nav>
   </aside>
 
   <!-- Main -->
   <main class="dashboard-main">
     <div class="dash-header" id="dashGreeting">
-      <h1>Loading...</h1>
+      <h1>Hello, Student 👋</h1>
       <p>Welcome to ShareSphere</p>
     </div>
 
     <!-- Stats -->
     <div class="stats-row" id="dashStats">
-      <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-info"><span class="stat-val" id="dsListings">-</span><span>My Listings</span></div></div>
-      <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-info"><span class="stat-val" id="dsRentals">-</span><span>Active Rentals</span></div></div>
-      <div class="stat-card"><div class="stat-icon">📬</div><div class="stat-info"><span class="stat-val" id="dsRequests">-</span><span>Pending Requests</span></div></div>
-      <div class="stat-card"><div class="stat-icon">🛒</div><div class="stat-info"><span class="stat-val" id="dsOrders">-</span><span>My Orders</span></div></div>
+      <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-info"><span class="stat-val" id="dsListings">3</span><span>My Listings</span></div></div>
+      <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-info"><span class="stat-val" id="dsRentals">1</span><span>Active Rentals</span></div></div>
+      <div class="stat-card"><div class="stat-icon">📬</div><div class="stat-info"><span class="stat-val" id="dsRequests">0</span><span>Pending Requests</span></div></div>
+      <div class="stat-card"><div class="stat-icon">🛒</div><div class="stat-info"><span class="stat-val" id="dsOrders">2</span><span>My Orders</span></div></div>
     </div>
 
     <!-- AI Search -->
@@ -82,7 +82,7 @@
 
     <!-- Recommendations -->
     <div class="dash-section">
-      <div class="section-header"><h3>✨ Recommended For You</h3><a href="/items.html" class="link">View All</a></div>
+      <div class="section-header"><h3>✨ Recommended For You</h3><a href="items.html" class="link">View All</a></div>
       <div class="items-grid" id="recommendGrid"></div>
     </div>
 
@@ -95,7 +95,7 @@
 </div>
 
 <div id="toast" class="toast hidden"></div>
-<script src="/js/api.js"></script>
-<script src="/js/app.js"></script>
-<script src="/js/dashboard.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
 </body></html>

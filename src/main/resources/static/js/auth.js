@@ -1,4 +1,4 @@
-﻿if (document.getElementById('loginForm')) {
+if (document.getElementById('loginForm')) {
   document.getElementById('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('loginBtn');
@@ -10,7 +10,7 @@
       });
       localStorage.setItem('ss_token', res.token);
       localStorage.setItem('ss_user', JSON.stringify(res));
-      window.location = res.role === 'ADMIN' ? '/admin.html' : '/dashboard.html';
+      window.location = res.role === 'ADMIN' ? 'admin.html' : 'dashboard.html';
     } catch(err) {
       const el = document.getElementById('authError');
       el.textContent = err.message; el.classList.remove('hidden');
@@ -33,7 +33,7 @@ if (document.getElementById('registerForm')) {
       });
       localStorage.setItem('ss_token', res.token);
       localStorage.setItem('ss_user', JSON.stringify(res));
-      window.location = '/dashboard.html';
+      window.location = 'dashboard.html';
     } catch(err) {
       const el = document.getElementById('authError');
       el.textContent = err.message; el.classList.remove('hidden');
