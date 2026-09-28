@@ -1,4 +1,6 @@
-// ── ShareSphere API Client with Hybrid Backend + Offline/GitHub Pages Demo Mock ──
+// ── ShareSphere API Client with Hybrid Backend + Instant GitHub Pages Demo Mock ──
+const isGitHubPages = typeof window !== 'undefined' && (window.location.hostname.includes('github.io') || window.location.protocol === 'file:');
+
 const MOCK_CATEGORIES = [
   { id: 1, name: "Electronics", icon: "💻", description: "Phones, laptops, cameras, gadgets" },
   { id: 2, name: "Books", icon: "📚", description: "Textbooks, novels, reference books" },
@@ -152,6 +154,10 @@ const API = {
   getToken: () => localStorage.getItem('ss_token'),
 
   async request(method, path, body=null, isForm=false) {
+    if (isGitHubPages) {
+      return this.handleMockFallback(method, path, body);
+    }
+
     const headers = {};
     const token = this.getToken();
     if (token) headers['Authorization'] = 'Bearer ' + token;
@@ -165,11 +171,9 @@ const API = {
       if (res.ok) {
         return await res.json().catch(()=>({}));
       }
-      // If error status, throw or fallback
       const data = await res.json().catch(()=>({}));
       throw new Error(data.message || data.error || 'Request failed');
     } catch (err) {
-      // Offline / GitHub Pages static demo fallback
       return this.handleMockFallback(method, path, body);
     }
   },
@@ -178,10 +182,16 @@ const API = {
     if (path === '/api/categories') return MOCK_CATEGORIES;
     if (path === '/api/items/popular' || path === '/api/items/latest') return MOCK_ITEMS;
     if (path.startsWith('/api/items/search')) {
+      const q = new URLSearchParams(path.split('?')[1]||'');
+      const catId = q.get('categoryId');
+      const kw = (q.get('keyword')||'').toLowerCase();
+      let filtered = [...MOCK_ITEMS];
+      if (catId) filtered = filtered.filter(i => i.category?.id == catId);
+      if (kw) filtered = filtered.filter(i => i.name.toLowerCase().includes(kw) || i.description.toLowerCase().includes(kw));
       return {
-        content: MOCK_ITEMS,
+        content: filtered,
         totalPages: 1,
-        totalElements: MOCK_ITEMS.length,
+        totalElements: filtered.length,
         size: 12,
         number: 0
       };
