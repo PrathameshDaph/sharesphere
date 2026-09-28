@@ -58,8 +58,14 @@
   <div class="container">
     <div class="section-header"><h2>Browse Categories</h2><p>Find exactly what you need</p></div>
     <div class="category-grid" id="categoryGrid">
-      <div class="category-skeleton"></div><div class="category-skeleton"></div>
-      <div class="category-skeleton"></div><div class="category-skeleton"></div>
+      <a href="items.html?categoryId=1" class="category-card"><div class="cat-icon">💻</div><div class="cat-name">Electronics</div></a>
+      <a href="items.html?categoryId=2" class="category-card"><div class="cat-icon">📚</div><div class="cat-name">Books</div></a>
+      <a href="items.html?categoryId=3" class="category-card"><div class="cat-icon">🧮</div><div class="cat-name">Calculators</div></a>
+      <a href="items.html?categoryId=4" class="category-card"><div class="cat-icon">📐</div><div class="cat-name">Engineering Tools</div></a>
+      <a href="items.html?categoryId=5" class="category-card"><div class="cat-icon">🔬</div><div class="cat-name">Lab Equipment</div></a>
+      <a href="items.html?categoryId=6" class="category-card"><div class="cat-icon">⚽</div><div class="cat-name">Sports Equipment</div></a>
+      <a href="items.html?categoryId=7" class="category-card"><div class="cat-icon">🪑</div><div class="cat-name">Furniture</div></a>
+      <a href="items.html?categoryId=8" class="category-card"><div class="cat-icon">🚲</div><div class="cat-name">Cycles</div></a>
     </div>
   </div>
 </section>
@@ -71,7 +77,75 @@
       <h2>🔥 Popular Items</h2>
       <a href="items.html" class="btn btn-ghost btn-sm">View All →</a>
     </div>
-    <div class="items-grid" id="popularGrid"></div>
+    <div class="items-grid" id="popularGrid">
+      <div class="item-card" onclick="window.location='item-detail.html?id=1'">
+        <div class="item-image-wrap">
+          <img src="https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?w=600&auto=format&fit=crop&q=80" alt="Casio FX-991CW">
+          <span class="item-badge badge-sell_and_rent">SELL &amp; RENT</span>
+        </div>
+        <div class="item-body">
+          <div class="item-category">🧮 Calculators</div>
+          <h3>Casio FX-991CW Scientific Calculator</h3>
+          <div class="item-price">₹900 · ₹30/day</div>
+          <div class="item-footer">
+            <span class="item-condition">Like New</span>
+            <span class="item-rating">⭐ 4.8</span>
+            <span class="item-location">📍 Hostel A</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-card" onclick="window.location='item-detail.html?id=2'">
+        <div class="item-image-wrap">
+          <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&auto=format&fit=crop&q=80" alt="DSLR Camera">
+          <span class="item-badge badge-sell_and_rent">SELL &amp; RENT</span>
+        </div>
+        <div class="item-body">
+          <div class="item-category">💻 Electronics</div>
+          <h3>DSLR Camera Canon 200D</h3>
+          <div class="item-price">₹28000 · ₹300/day</div>
+          <div class="item-footer">
+            <span class="item-condition">Good</span>
+            <span class="item-rating">⭐ 5.0</span>
+            <span class="item-location">📍 Hostel A</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-card" onclick="window.location='item-detail.html?id=3'">
+        <div class="item-image-wrap">
+          <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=600&auto=format&fit=crop&q=80" alt="Arduino Kit">
+          <span class="item-badge badge-sell_and_rent">SELL &amp; RENT</span>
+        </div>
+        <div class="item-body">
+          <div class="item-category">💻 Electronics</div>
+          <h3>Arduino Uno Starter Kit</h3>
+          <div class="item-price">₹1500 · ₹50/day</div>
+          <div class="item-footer">
+            <span class="item-condition">New</span>
+            <span class="item-rating">⭐ 4.7</span>
+            <span class="item-location">📍 Lab Block</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-card" onclick="window.location='item-detail.html?id=5'">
+        <div class="item-image-wrap">
+          <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&auto=format&fit=crop&q=80" alt="Mountain Bicycle">
+          <span class="item-badge badge-sell_and_rent">SELL &amp; RENT</span>
+        </div>
+        <div class="item-body">
+          <div class="item-category">🚲 Cycles</div>
+          <h3>Mountain Bicycle - Hero Sprint</h3>
+          <div class="item-price">₹6000 · ₹100/day</div>
+          <div class="item-footer">
+            <span class="item-condition">Good</span>
+            <span class="item-rating">⭐ 4.9</span>
+            <span class="item-location">📍 Parking Lot B</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -92,7 +166,58 @@
 <section class="section section-dark">
   <div class="container">
     <div class="section-header"><h2>🆕 Latest Listings</h2><a href="items.html" class="btn btn-ghost btn-sm">See All →</a></div>
-    <div class="items-grid" id="latestGrid"></div>
+    <div class="items-grid" id="latestGrid">
+      <div class="item-card" onclick="window.location='item-detail.html?id=6'">
+        <div class="item-image-wrap">
+          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80" alt="CLRS Book">
+          <span class="item-badge badge-sell">SELL</span>
+        </div>
+        <div class="item-body">
+          <div class="item-category">📚 Books</div>
+          <h3>Data Structures &amp; Algorithms - CLRS 4th Ed</h3>
+          <div class="item-price">₹1200</div>
+          <div class="item-footer">
+            <span class="item-condition">Like New</span>
+            <span class="item-rating">⭐ 5.0</span>
+            <span class="item-location">📍 Library Block</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-card" onclick="window.location='item-detail.html?id=7'">
+        <div class="item-image-wrap">
+          <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=600&auto=format&fit=crop&q=80" alt="Raspberry Pi">
+          <span class="item-badge badge-sell_and_rent">SELL &amp; RENT</span>
+        </div>
+        <div class="item-body">
+          <div class="item-category">💻 Electronics</div>
+          <h3>Raspberry Pi 4 Model B (4GB)</h3>
+          <div class="item-price">₹5500 · ₹150/day</div>
+          <div class="item-footer">
+            <span class="item-condition">New</span>
+            <span class="item-rating">⭐ 4.9</span>
+            <span class="item-location">📍 Lab Block</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-card" onclick="window.location='item-detail.html?id=8'">
+        <div class="item-image-wrap">
+          <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&auto=format&fit=crop&q=80" alt="JBL Speaker">
+          <span class="item-badge badge-sell_and_rent">SELL &amp; RENT</span>
+        </div>
+        <div class="item-body">
+          <div class="item-category">💻 Electronics</div>
+          <h3>Wireless Bluetooth Speaker - JBL Go 3</h3>
+          <div class="item-price">₹2500 · ₹70/day</div>
+          <div class="item-footer">
+            <span class="item-condition">Like New</span>
+            <span class="item-rating">⭐ 4.8</span>
+            <span class="item-location">📍 Hostel B</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -117,15 +242,6 @@
 <script src="js/app.js"></script>
 <script>
 async function loadHomePage() {
-  // Stats
-  try {
-    const items = await API.get('/api/items/popular');
-    if (items && items.length) document.getElementById('statItems').textContent = items.length + '+';
-    const users = await API.get('/api/admin/stats').catch(()=>null);
-    if (users) document.getElementById('statUsers').textContent = users.totalUsers + '+';
-  } catch(e){}
-
-  // Categories
   try {
     const cats = await API.get('/api/categories');
     const grid = document.getElementById('categoryGrid');
@@ -138,7 +254,6 @@ async function loadHomePage() {
     }
   } catch(e){}
 
-  // Popular
   try {
     const popular = await API.get('/api/items/popular');
     if (popular && popular.length) {
@@ -146,7 +261,6 @@ async function loadHomePage() {
     }
   } catch(e){}
 
-  // Latest
   try {
     const latest = await API.get('/api/items/latest');
     if (latest && latest.length) {
