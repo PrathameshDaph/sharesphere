@@ -1,0 +1,30 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IDE files ###
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+### Environment & Sensitive ###
+.env
+*.log
+
+### Bundled Binaries & Downloads ###
+jdk21.zip
+maven.zip
+jdk-21.0.4+7/
+apache-maven-3.9.6/
+
+### Dynamic uploads ###
+uploads/*
+!uploads/.gitkeep
+
+### OS generated ###
+.DS_Store
+Thumbs.db

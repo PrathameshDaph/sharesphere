@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Item Detail — ShareSphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar"><div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+<div class="nav-links"><a href="/items.html">← Back to Items</a></div>
+<div class="nav-actions" id="navActions"></div></nav>
+<div class="page-container">
+  <div id="itemDetail"></div>
+  <!-- Rental Modal -->
+  <div id="rentalModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;display:flex;align-items:center;justify-content:center;">
+    <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:20px;padding:2rem;max-width:440px;width:90%;">
+      <h3 style="margin-bottom:1rem">📅 Request Rental</h3>
+      <div class="form-group"><label>Start Date</label><input type="date" id="rentStart" class="form-control"></div>
+      <div class="form-group"><label>End Date</label><input type="date" id="rentEnd" class="form-control"></div>
+      <div class="form-group"><label>Note (optional)</label><textarea id="rentNote" class="form-control" rows="2" placeholder="Any message to the owner..."></textarea></div>
+      <div id="rentalCalc" style="background:var(--bg-input);border-radius:10px;padding:1rem;margin-bottom:1rem;font-size:0.9rem;"></div>
+      <div style="display:flex;gap:0.75rem">
+        <button onclick="closeRentalModal()" class="btn btn-ghost btn-block">Cancel</button>
+        <button onclick="submitRental()" class="btn btn-primary btn-block">Confirm Request</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script>
+updateNavForAuth();
+const params = new URLSearchParams(location.search);
+const itemId = params.get('id');
+let currentItem = null;
+const me = JSON.parse(localStorage.getItem('ss_user')||'null');
+
+async function loadItem() {
+  currentItem = await API.get(`/api/items/${itemId}`).catch(()=>null);
+  if (!currentItem) { document.getElementById('itemDetail').innerHTML='<div class="empty-state"><p>Item not found.</p></div>'; return; }
+  const i = currentItem;
+  const imgs = i.imageUrls?.length ? i.imageUrls.map(url=>`<img src="${url}" style="width:100%;max-height:400px;object-fit:cover;border-radius:12px;" onerror="this.src='/images/placeholder.svg'">`).join('') : `<img src="/images/placeholder.svg" style="width:100%;border-radius:12px;">`;
+  const isMine = me && me.userId === i.owner?.id;
+  const canBuy = !isMine && (i.listingType==='SELL'||i.listingType==='SELL_AND_RENT');
+  const canRent = !isMine && (i.listingType==='RENT'||i.listingType==='SELL_AND_RENT'||i.listingType==='LEND');
+
+  const reviews = await API.get(`/api/reviews/item/${itemId}`).catch(()=>[]);
+  const similar = await API.get(`/api/ai/similar/${itemId}`).catch(()=>[]);
+
+  document.getElementById('itemDetail').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem;" class="item-detail-grid">
+      <div>${imgs}</div>
+      <div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem">${i.category?.icon||''} ${i.category?.name||''}</div>
+        <h1 style="font-size:1.6rem;font-weight:800;margin-bottom:0.75rem">${i.name}</h1>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem">
+          <span class="item-badge badge-${(i.listingType||'').toLowerCase()}" style="position:static">${i.listingType}</span>
+          <span style="color:var(--text-muted);font-size:0.85rem">Condition: ${i.condition}</span>
+          <span style="color:var(--text-muted);font-size:0.85rem">📍 ${i.location||'Campus'}</span>
+        </div>
+        <div style="margin-bottom:1rem">
+          ${i.price?`<div style="font-size:1.5rem;font-weight:800;color:var(--primary-light)">₹${i.price} <span style="font-size:0.8rem;color:var(--text-muted)">sale price</span></div>`:''}
+          ${i.rentalPricePerDay?`<div style="font-size:1.1rem;color:#60a5fa;margin-top:0.25rem">₹${i.rentalPricePerDay}/day rental ${i.securityDeposit?`+ ₹${i.securityDeposit} deposit`:''}</div>`:''}
+        </div>
+        <div style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;margin-bottom:1.5rem">${i.description||'No description provided.'}</div>
+        <div style="background:var(--bg-card2);border-radius:12px;padding:1rem;margin-bottom:1.5rem">
+          <strong>Owner:</strong> ${i.owner?.name} · ⭐ ${i.owner?.averageRating?.toFixed(1)||'New'}<br>
+          <span style="font-size:0.8rem;color:var(--text-muted)">${i.owner?.college||''} ${i.owner?.location?'· '+i.owner.location:''}</span>
+        </div>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+          ${canBuy && i.status==='AVAILABLE'?`<button onclick="buyNow()" class="btn btn-primary btn-lg">🛒 Buy Now</button>`:''}
+          ${canRent && i.status==='AVAILABLE'?`<button onclick="openRentalModal()" class="btn btn-secondary btn-lg">📅 Rent</button>`:''}
+          ${!isMine&&me?`<button onclick="contactOwner(${i.owner?.id})" class="btn btn-ghost btn-lg">💬 Contact</button>`:''}
+          ${!isMine&&me?`<button onclick="toggleFav(${i.id},this)" class="btn btn-ghost">${i.favorited?'❤️':'🤍'} Save</button>`:''}
+        </div>
+        ${i.status!=='AVAILABLE'?`<p style="color:var(--text-muted);margin-top:1rem;font-size:0.9rem">⚠️ This item is currently ${i.status}</p>`:''}
+      </div>
+    </div>
+    ${reviews.length?`<div style="margin-bottom:2rem"><h3 style="margin-bottom:1rem">⭐ Reviews (${reviews.length})</h3>${reviews.map(r=>`<div style="background:var(--bg-card2);border-radius:12px;padding:1rem;margin-bottom:0.75rem"><strong>${r.reviewer?.name}</strong> · ${'⭐'.repeat(r.rating)}<p style="color:var(--text-secondary);font-size:0.875rem;margin-top:0.25rem">${r.comment||''}</p></div>`).join('')}</div>`:''}
+    ${similar.length?`<div><h3 style="margin-bottom:1rem">🤖 Similar Items</h3><div class="items-grid">${similar.map(renderItemCard).join('')}</div></div>`:''}
+  `;
+}
+
+function openRentalModal() {
+  if (!me) { window.location='/login.html'; return; }
+  document.getElementById('rentalModal').classList.remove('hidden');
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('rentStart').min = today;
+  document.getElementById('rentEnd').min = today;
+}
+function closeRentalModal() { document.getElementById('rentalModal').classList.add('hidden'); }
+document.getElementById('rentEnd')?.addEventListener('change', calcRental);
+document.getElementById('rentStart')?.addEventListener('change', calcRental);
+function calcRental() {
+  const s = new Date(document.getElementById('rentStart')?.value);
+  const e = new Date(document.getElementById('rentEnd')?.value);
+  if (s && e && e > s && currentItem) {
+    const days = Math.ceil((e-s)/(1000*60*60*24));
+    const rental = days * (currentItem.rentalPricePerDay||0);
+    const dep = currentItem.securityDeposit||0;
+    document.getElementById('rentalCalc').innerHTML = `
+      ₹${currentItem.rentalPricePerDay}/day × ${days} days = <strong>₹${rental}</strong><br>
+      Security deposit: ₹${dep}<br>
+      <strong>Total payable: ₹${rental+Number(dep)}</strong>`;
+  }
+}
+async function submitRental() {
+  const data = { itemId: +itemId, startDate: document.getElementById('rentStart').value, endDate: document.getElementById('rentEnd').value, renterNote: document.getElementById('rentNote').value };
+  await API.post('/api/rentals', data);
+  showToast('Rental request sent! 🎉','success');
+  closeRentalModal();
+  setTimeout(()=>window.location='/rentals.html',1500);
+}
+async function buyNow() {
+  if (!me) { window.location='/login.html'; return; }
+  if (!confirm('Confirm purchase of '+currentItem?.name+'?')) return;
+  const order = await API.post('/api/orders',{itemId:+itemId});
+  showToast('Order created! Ref: '+order.transactionRef,'success');
+  setTimeout(()=>window.location='/orders.html',1500);
+}
+function contactOwner(ownerId) { window.location='/messages.html?with='+ownerId; }
+if (itemId) loadItem();
+</script>
+<style>
+@media(max-width:700px){.item-detail-grid{grid-template-columns:1fr!important}}
+</style>
+</body></html>

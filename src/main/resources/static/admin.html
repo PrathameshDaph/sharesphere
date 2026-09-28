@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard — ShareSphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar navbar-dashboard">
+  <div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere Admin</span></a></div>
+  <div class="nav-actions"><span id="adminUser"></span><button onclick="logout()" class="btn btn-ghost btn-sm">Logout</button></div>
+</nav>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#stats" class="active" onclick="showSection('stats')">📊 Stats</a>
+      <a href="#users" onclick="showSection('users')">👥 Users</a>
+      <a href="#items" onclick="showSection('items')">📦 Items</a>
+      <a href="#reports" onclick="showSection('reports')">⚠️ Reports</a>
+    </nav>
+  </aside>
+  <main class="dashboard-main">
+    <!-- Stats -->
+    <div id="section-stats">
+      <h2>📊 Platform Statistics</h2>
+      <div class="stats-row" id="adminStats"></div>
+    </div>
+    <!-- Users -->
+    <div id="section-users" class="hidden">
+      <h2>👥 All Users</h2>
+      <div id="adminUsersList"></div>
+    </div>
+    <!-- Items -->
+    <div id="section-items" class="hidden">
+      <h2>📦 All Listings</h2>
+      <div id="adminItemsList"></div>
+    </div>
+    <!-- Reports -->
+    <div id="section-reports" class="hidden">
+      <h2>⚠️ Reports</h2>
+      <div id="adminReportsList"></div>
+    </div>
+  </main>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script src="/js/admin.js"></script>
+</body></html>

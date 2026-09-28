@@ -1,0 +1,18 @@
+package com.sharesphere.entity;
+
+public enum NotificationType {
+    RENTAL_REQUEST,
+    RENTAL_ACCEPTED,
+    RENTAL_REJECTED,
+    RENTAL_ACTIVE,
+    RENTAL_RETURN_REQUESTED,
+    RENTAL_COMPLETED,
+    RENTAL_OVERDUE,
+    ORDER_PLACED,
+    ORDER_COMPLETED,
+    ITEM_SOLD,
+    NEW_MESSAGE,
+    NEW_REVIEW,
+    REPORT_RESOLVED,
+    SYSTEM
+}

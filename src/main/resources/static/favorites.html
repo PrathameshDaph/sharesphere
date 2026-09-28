@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Favorites — ShareSphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar"><div class="nav-brand"><a href="/"><span class="logo-icon">🌐</span><span class="logo-text">ShareSphere</span></a></div>
+<div class="nav-links"><a href="/dashboard.html">Dashboard</a></div>
+<div class="nav-actions" id="navActions"></div></nav>
+<div class="page-container">
+  <div class="page-header"><h2>❤️ My Favorites</h2></div>
+  <div class="items-grid" id="favGrid"></div>
+  <div id="emptyFav" class="empty-state hidden"><p>No favorites yet. Browse and save items you like!</p><a href="/items.html" class="btn btn-primary">Browse Items</a></div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="/js/api.js"></script><script src="/js/app.js"></script>
+<script>
+requireAuth();
+async function loadFavs() {
+  const favs = await API.get('/api/favorites');
+  if (!favs.length) { document.getElementById('emptyFav').classList.remove('hidden'); return; }
+  document.getElementById('favGrid').innerHTML = favs.map(f => renderItemCard(f.item)).join('');
+}
+loadFavs(); updateNavForAuth();
+</script>
+</body></html>
